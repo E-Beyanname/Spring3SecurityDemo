@@ -1,4 +1,4 @@
-package com.tbtk.blgm.spring3securitydemo.entity;
+package com.tbtk.blgm.spring3securitydemo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.tbtk.blgm.spring3securitydemo.controller;
 
-import com.tbtk.blgm.spring3securitydemo.entity.Customer;
+import com.tbtk.blgm.spring3securitydemo.model.Customer;
 import com.tbtk.blgm.spring3securitydemo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
