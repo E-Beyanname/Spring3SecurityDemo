@@ -1,5 +1,6 @@
 package com.tbtk.blgm.spring3securitydemo.config;
 
+import com.tbtk.blgm.spring3securitydemo.model.Authority;
 import com.tbtk.blgm.spring3securitydemo.model.Customer;
 import com.tbtk.blgm.spring3securitydemo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class BankUsernamePasswordAuthenticationProvider implements AuthenticationProvider {
@@ -37,7 +39,8 @@ public class BankUsernamePasswordAuthenticationProvider implements Authenticatio
             if(passwordEncoder.matches(password,customers.get(0).getPassword())){
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(customers.get(0).getRole()));
-                return new UsernamePasswordAuthenticationToken(username,password,authorities);
+                return new UsernamePasswordAuthenticationToken(username,password,
+                        getGrandtedAuthorities(customers.get(0).getAuthorities()));
             }
             else
                 throw new BadCredentialsException("Invalid Password");
@@ -49,5 +52,15 @@ public class BankUsernamePasswordAuthenticationProvider implements Authenticatio
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+
+    private List<GrantedAuthority> getGrandtedAuthorities(Set<Authority> authorities){
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+
+        for (Authority authority: authorities){
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
+        }
+
+        return grantedAuthorities;
     }
 }

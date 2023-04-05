@@ -29,12 +29,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests((authorize) -> authorize
+        http.csrf().disable().authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+                        .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT","VIEWBALANCE")
+                        .requestMatchers("/myLoans").hasAuthority("VIEWACCOUNT")
+                        .requestMatchers("/myCards").hasAuthority("VIEWACCOUNT")
+                        .requestMatchers("/user").authenticated())
                 .formLogin()
                 .and()
                 .httpBasic(withDefaults());
+
+       /* http.csrf().disable().authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers("/myAccount").hasRole("USER")
+                        .requestMatchers("/myBalance").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/myLoans").hasAuthority("USER")
+                        .requestMatchers("/myCards").hasAuthority("USER")
+                        .requestMatchers("/user").authenticated())
+                .formLogin()
+                .and()
+                .httpBasic(withDefaults());*/
+
+
+
         return http.build();
     }
 
